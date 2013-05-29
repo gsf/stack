@@ -10,5 +10,8 @@
   },
   "bugs": "http://github.com/creationix/stack/issues",
   "engines": ["node >= 0.2.0"],
-  "main": "stack.js"
+  "scripts": {
+    "test": "find test/*.js | xargs -n 1 -t node"
+  },
+  "main": "index.js"
 }
