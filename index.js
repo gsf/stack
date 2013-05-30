@@ -2,14 +2,13 @@ function stack (/*layers*/) {
   // Innermost (last) handler is always 404
   var handler = stack.notFoundHandler
 
+  // Nest handlers
   Array.prototype.slice.call(arguments).reverse().forEach(function (layer) {
     var child = handler
     handler = function (req, res) {
       try {
         layer(req, res, function (err) {
-          if (err) { 
-            return stack.errorHandler(req, res, err) 
-          }
+          if (err) return stack.errorHandler(req, res, err) 
           child(req, res)
         })
       } catch (err) {
@@ -17,6 +16,7 @@ function stack (/*layers*/) {
       }
     }
   })
+
   return handler
 }
 
