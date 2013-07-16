@@ -23,7 +23,7 @@ function stack (/*layers*/) {
 stack.errorHandler = function (req, res, err) {
   console.error(err.stack)
   res.writeHead(500, {'Content-Type': 'text/plain'})
-  return res.end('Error\n')
+  res.end('Error\n')
 }
 
 stack.notFoundHandler = function (req, res) {
