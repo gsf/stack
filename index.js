@@ -1,6 +1,6 @@
 function stack (/*layers*/) {
-  // Innermost (last) handler is always 404
-  var handler = stack.notFoundHandler
+  // Innermost (last) handler is our overridable built-in one
+  var handler = stack.handler
 
   // Nest handlers
   Array.prototype.slice.call(arguments).reverse().forEach(function (layer) {
@@ -8,11 +8,11 @@ function stack (/*layers*/) {
     handler = function (req, res) {
       try {
         layer(req, res, function (err) {
-          if (err) return stack.errorHandler(req, res, err) 
+          if (err) return stack.handler(req, res, err) 
           child(req, res)
         })
       } catch (err) {
-        stack.errorHandler(req, res, err)
+        stack.handler(req, res, err)
       }
     }
   })
@@ -20,15 +20,16 @@ function stack (/*layers*/) {
   return handler
 }
 
-stack.errorHandler = function (req, res, err) {
-  console.error(err.stack)
-  res.writeHead(500, {'Content-Type': 'text/plain'})
-  res.end('Error\n')
-}
-
-stack.notFoundHandler = function (req, res) {
-  res.writeHead(404, {'Content-Type': 'text/plain'})
-  res.end('Not Found\n')
+stack.handler = function (req, res, err) {
+  res.setHeader['Content-Type'] = 'text/plain'
+  if (err) {
+    console.error(err.stack)
+    res.statusCode = 500
+    res.end('Error\n')
+  } else {
+    res.statusCode = 404
+    res.end('Not Found\n')
+  }
 }
 
 module.exports = stack
