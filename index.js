@@ -27,6 +27,7 @@ stack.handler = function (req, res, err) {
     res.statusCode = 500
     res.end('Error\n')
   } else {
+    console.warn('Warning: Not Found')
     res.statusCode = 404
     res.end('Not Found\n')
   }
